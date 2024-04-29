@@ -27,6 +27,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const artCollection = client.db("artDB").collection("art");
+    const userCollection = client.db('artDB').collection('user');
+
 
     app.get("/art", async (req, res) => {
       const cursor = artCollection.find();
@@ -45,12 +47,36 @@ async function run() {
     
     app.get("/art/:id", async (req, res) => {
       const id = req.params.id;
-      const query = { _id: new ObjectId(id) };
+      const query = { email: new ObjectId(id) };
       const result = await artCollection.findOne(query);
       res.send(result);
     });
 
     
+
+
+
+
+
+
+
+
+    //user related
+    app.get("/user", async (req, res) => {
+      const cursor = userCollection.find();
+      const users = await cursor.toArray();
+      res.send(users);
+    });
+
+
+    app.post("/user", async (req, res) => {
+      const user = req.body;
+      console.log(user);
+      const result = await userCollection.insertOne(user);
+      res.send(result);
+    });
+
+
   
     // Connect the client to the server	(optional starting in v4.7)
     //await client.connect();
