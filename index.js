@@ -6,7 +6,9 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 //middleware
-app.use(cors());
+app.use(cors({
+  origin: ["http://localhost:5173", "https://art-store-64ab6.web.app"]
+}));
 app.use(express.json());
 
 // console.log(process.env.DB_USER)
