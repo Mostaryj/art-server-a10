@@ -28,12 +28,62 @@ async function run() {
   try {
     const artCollection = client.db("artDB").collection("art");
 
-
+ //my list
     app.get("/art", async (req, res) => {
       const cursor = artCollection.find();
       const result = await cursor.toArray();
       res.send(result);
     });
+
+
+
+
+       // update
+
+       app.get("/art/:id", async (req, res) => {
+        const id = req.params.id;
+        const query = { _id: new ObjectId(id) };
+        const result = await artCollection.findOne(query);
+        res.send(result);
+      });
+
+
+    //update put
+   app.put("/art/:id", async (req, res) => {
+    const id = req.params.id;
+    const filter = { _id: new ObjectId(id) };
+    const options = { upsert: true };
+    const updatedArt = req.body;
+    const art = {
+      $set: {
+        photo: updatedArt.photo,
+        item: updatedArt.item,
+        sub: updatedArt.sub,
+        description: updatedArt.description,
+        price: updatedArt.price,
+        rating: updatedArt.rating,
+        customization: updatedArt.customization,
+        time: updatedArt.time,
+        stock:updatedArt.stock,
+       
+
+      },
+    };
+    const result = await artCollection.updateOne(filter, art, options);
+     res.send(result);
+    
+ });
+
+
+//delete
+    app.delete('/art-craft/:id', async (req, res) =>{
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id)};
+      const result = await artCollection.deleteOne(query);
+   
+      res.send(result);
+     
+    })
 
     app.post("/art", async (req, res) => {
       const newArt = req.body;
@@ -51,9 +101,10 @@ async function run() {
       res.send(result);
     });
 
-    
+   
 
 
+   
   
 
     app.get('/art-email/:email', async (req, res) => {
