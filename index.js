@@ -27,6 +27,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const artCollection = client.db("artDB").collection("art");
+    const categoryCollection = client.db("artDB").collection("artCraft");
 
  //my list
     app.get("/art", async (req, res) => {
